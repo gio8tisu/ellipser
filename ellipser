@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+
+import argparse
+import fileinput
+
+import ellipsis
+
+
+parser = argparse.ArgumentParser(
+    description="Limits the width of each line in FILE(s) to MAX_LEN")
+parser.add_argument("file", metavar="FILE", nargs="*",
+                    help="With no FILE, or when FILE is -, read standard input.")
+parser.add_argument("--max-len", type=int, default=32,
+                    help="Set output maximum line width.")
+parser.add_argument("--min-len", type=int, default=1,
+                    help="If cut line is smaller than MIN_LEN, append from next word.")
+
+args = parser.parse_args()
+
+ellipsis_formatter = ellipsis.EllipsisFormatter(args.max_len, args.min_len)
+
+for line in fileinput.input(args.file):
+    print(ellipsis_formatter.format(line))
+
